@@ -3,155 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celengan Pintar - Pengelolaan Uang Jajan</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://tailwindcss.com"></script>
-    
-    <!-- Google Fonts for Kid-Friendly Look -->
+    <title>CelenganPintar - Kelola Uang Jajanmu!</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Brython (Python in the Browser) CDN -->
-    <script type="text/javascript" src="https://jsdelivr.net"></script>
-    <script type="text/javascript" src="https://jsdelivr.net"></script>
-
     <style>
+        /* --- RESET & GLOBAL STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --pink-pastel: #FFF0F2;
+            --pink-dark: #FFB3BA;
+            --pink-text: #C94A59;
+            --mint-green: #E8F7F2;
+            --mint-dark: #B3F0DB;
+            --mint-text: #2D7A61;
+            --soft-blue: #E8F4F8;
+            --blue-dark: #BAE1FF;
+            --blue-text: #3D6A8A;
+            --cheerful-yellow: #FFF9E6;
+            --yellow-dark: #FFE499;
+            --yellow-text: #8A6D1C;
+            --text-main: #334155;
+            --text-muted: #64748B;
+            --bg-app: #FAF8F5;
+            --white: #FFFFFF;
+        }
+
         body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--white);
+            border-radius: 32px;
+            border: 4px solid #F1ECE4;
+            box-shadow: 0 16px 0px #E5DEC9;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* --- HEADER (LUCU & RAMAH) --- */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
             font-family: 'Fredoka', sans-serif;
-            background-color: #F0F9FF; /* Soft Blue Sky */
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: #C94A59;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .animate-bounce-slow {
-            animation: bounce 2s infinite;
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 4px;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8,0,1,1); }
-            50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); }
+
+        /* --- DASHBOARD CARD (PINK PASTEL) --- */
+        .dashboard-card {
+            background-color: var(--pink-pastel);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 3px solid var(--pink-dark);
+            box-shadow: 0 8px 0px rgba(255, 179, 186, 0.4);
+            transition: transform 0.2s ease;
         }
-        /* Smooth transitions for progress bar */
-        .progress-bar-transition {
-            transition: width 0.5s ease-in-out;
+
+        .dashboard-card h2 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            color: var(--pink-text);
+            margin-bottom: 6px;
         }
-    </style>
-</head>
-<body onload="brython()">
 
-    <!-- Header Section -->
-    <header class="bg-amber-100 text-amber-800 py-6 px-4 shadow-sm border-b-4 border-amber-200">
-        <div class="max-w-4xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <span class="text-4xl animate-bounce-slow">🐷</span>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-amber-600">Celengan Pintar</h1>
-                    <p class="text-sm text-amber-700">Yuk belajar mengelola uang jajanmu secara mandiri!</p>
-                </div>
-            </div>
-            <span class="text-3xl">🎒✨</span>
-        </div>
-    </header>
+        .dashboard-card .balance {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--pink-text);
+            margin-bottom: 20px;
+        }
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+        /* --- CELENGAN TARGET (PROGRESS BAR) --- */
+        .target-box {
+            background: var(--white);
+            border: 2px solid var(--pink-dark);
+            border-radius: 18px;
+            padding: 16px;
+            text-align: left;
+        }
 
-        <!-- 1. DASHBOARD ANAK -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Saldo Hari Ini -->
-            <div class="bg-emerald-100 border-4 border-emerald-200 rounded-3xl p-6 shadow-sm text-center transform hover:scale-105 transition-transform duration-200">
-                <span class="text-4xl">💰</span>
-                <h3 class="text-emerald-800 text-lg font-semibold mt-2">Dompet Jajan Harian</h3>
-                <p id="saldo-jajan" class="text-3xl font-bold text-emerald-600 mt-1">Rp 0</p>
-                <div class="mt-4 flex space-x-2">
-                    <button id="btn-modal-jajan" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-3 rounded-2xl shadow border-b-4 border-emerald-700 text-sm active:border-b-0 active:mt-1 transition-all">💸 Catat Jajan</button>
-                </div>
-            </div>
+        .target-box .target-info {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
 
-            <!-- Tabungan Utama -->
-            <div class="bg-indigo-100 border-4 border-indigo-200 rounded-3xl p-6 shadow-sm text-center transform hover:scale-105 transition-transform duration-200">
-                <span class="text-4xl">🏦</span>
-                <h3 class="text-indigo-800 text-lg font-semibold mt-2">Tabungan Utama</h3>
-                <p id="saldo-tabungan" class="text-3xl font-bold text-indigo-600 mt-1">Rp 0</p>
-                <div class="mt-4">
-                    <button id="btn-modal-tabung" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-2xl shadow border-b-4 border-indigo-700 text-sm active:border-b-0 active:mt-1 transition-all">⭐ Tambah Celengan</button>
-                </div>
-            </div>
+        .progress-bar-container {
+            background: #F1ECE4;
+            border-radius: 20px;
+            height: 20px;
+            width: 100%;
+            overflow: hidden;
+            border: 2px solid #E5DEC9;
+        }
 
-            <!-- Pos Darurat / Mandiri -->
-            <div class="bg-rose-100 border-4 border-rose-200 rounded-3xl p-6 shadow-sm text-center transform hover:scale-105 transition-transform duration-200">
-                <span class="text-4xl">🚨</span>
-                <h3 class="text-rose-800 text-lg font-semibold mt-2">Kebutuhan Mandiri</h3>
-                <p id="saldo-darurat" class="text-3xl font-bold text-rose-600 mt-1">Rp 0</p>
-                <p class="text-xs text-rose-700 mt-3 italic">*Untuk kebutuhan mendadak & sekolah</p>
-            </div>
-        </section>
+        .progress-bar {
+            background: linear-gradient(90deg, #FF9AA2, #FFB3BA);
+            height: 100%;
+            width: 0%;
+            border-radius: 20px;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-        <!-- 2. SISTEM AMPLOP OTOMATIS -->
-        <section class="bg-amber-50 border-4 border-amber-200 rounded-3xl p-6 shadow-sm">
-            <h2 class="text-xl font-bold text-amber-700 mb-3 flex items-center"><span class="mr-2">✉️</span> Sistem Amplop Otomats</h2>
-            <p class="text-sm text-amber-800 mb-4">Masukkan uang jajan barumu di sini. AI akan langsung membaginya secara adil ke 3 dompetmu!</p>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="number" id="input-uang-jajan" placeholder="Contoh: 50000" class="flex-1 px-4 py-3 rounded-2xl border-3 border-amber-200 focus:outline-none focus:border-amber-400 text-lg">
-                <button id="btn-proses-amplop" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-2xl shadow border-b-4 border-amber-700 active:border-b-0 active:mt-1 transition-all text-lg">✨ Bagi Uang Jajan!</button>
-            </div>
-            <div class="grid grid-cols-3 gap-2 mt-4 text-center text-xs text-amber-700 font-semibold bg-white p-3 rounded-xl border border-amber-100">
-                <div>🍔 Jajan: 70%</div>
-                <div>🐷 Tabung: 20%</div>
-                <div>📚 Mandiri: 10%</div>
-            </div>
-        </section>
+        /* --- QUICK BUTTONS (BESAR & INTERAKTIF) --- */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-        <!-- 3. TARGET MENABUNG (SAVINGS GOALS) -->
-        <section class="bg-sky-100 border-4 border-sky-200 rounded-3xl p-6 shadow-sm">
-            <h2 class="text-xl font-bold text-sky-800 mb-4 flex items-center"><span class="mr-2">🎯</span> Celengan Target Impian</h2>
-            
-            <!-- Progress Target -->
-            <div class="bg-white p-4 rounded-2xl border-2 border-sky-200 mb-6">
-                <div class="flex justify-between items-center mb-2">
-                    <div class="flex items-center space-x-2">
-                        <span id="target-ikon" class="text-2xl">🚲</span>
-                        <span id="target-nama" class="font-bold text-sky-900 text-lg">Sepeda Baru</span>
-                    </div>
-                    <span id="target-rasio" class="text-sm font-semibold text-sky-700 bg-sky-50 px-3 py-1 rounded-full">Rp 0 / Rp 150.000</span>
-                </div>
-                <!-- Progress Bar -->
-                <div class="w-full bg-slate-100 rounded-full h-5 overflow-hidden p-0.5 border border-slate-200">
-                    <div id="target-progress" class="bg-sky-500 h-full rounded-full progress-bar-transition" style="width: 0%"></div>
-                </div>
-                <div class="mt-4 flex flex-col sm:flex-row gap-2">
-                    <input type="number" id="input-setor-target" placeholder="Jumlah setoran" class="flex-1 px-3 py-2 rounded-xl border border-sky-200 text-sm focus:outline-none">
-                    <button id="btn-setor-target" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm border-b-4 border-sky-700 active:border-b-0 active:mt-0.5 transition-all">Masukkan ke Celengan 🎯</button>
-                </div>
-            </div>
+        .btn-large {
+            border: none;
+            border-radius: 20px;
+            padding: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
 
-            <!-- Ganti Target Form -->
-            <details class="bg-sky-50/50 p-4 rounded-2xl border border-sky-200/60 text-sm">
-                <summary class="font-semibold text-sky-800 cursor-pointer select-none">⚙️ Ubah Target Impian Baru</summary>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-3">
-                    <input type="text" id="new-target-name" placeholder="Nama Barang Baru" class="px-3 py-2 rounded-xl border border-sky-200">
-                    <input type="number" id="new-target-price" placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl border border-sky-200">
-                    <select id="new-target-icon" class="px-3 py-2 rounded-xl border border-sky-200 bg-white">
-                        <option value="👟">👟 Sepatu Sekolah</option>
-                        <option value="📚">📚 Buku Cerita</option>
-                        <option value="🎮">🎮 Mainan Baru</option>
-                        <option value="🚲">🚲 Sepeda Lipat</option>
-                        <option value="🎒">🎒 Tas Sekolah</option>
-                    </select>
-                </div>
-                <button id="btn-update-target" class="mt-3 w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-xl border-b-4 border-teal-700 active:border-b-0 transition-all">Simpan Target Baru 💾</button>
-            </details>
-        </section>
+        .btn-large:active {
+            transform: translateY(4px);
+        }
 
-        <!-- 4. LOG RIWAYAT TRANSAKSI -->
-        <section class="bg-white border-4 border-slate-200 rounded-3xl p-6 shadow-sm">
-            <h2 class="text-xl font-bold text-slate-700 mb-4 flex items-center"><span class="mr-2">📜</span> Catatan Uang Masuk & Keluar</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 text-slate-600 text-sm border-b border-slate-200">
-                            <th class="p-3">Waktu</th>
-                            <th class="p-3">Jenis Kegiatan</th>
-                            <th class="p-3">Dompet/Pos</th>
-                            <th class="p-3 text-right">Jumlah Uang</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabel-riwayat" class="text-sm text-slate-800 divide-y divide-slate-100">
+        .btn-jajan {
+            background-color: var(--cheerful-yellow);
+            color: var(--yellow-text);
+            border: 3px solid var(--yellow-dark);
+            box-shadow: 0 6px 0px var(--yellow-dark);
+        }
+        
+        .btn-jajan:active {
+            box-shadow: 0 2px 0px var(--yellow-dark);
+        }
+
+        .btn-tabung {
+            background-color: var(--mint-green);
+            color: var(--mint-text);
+            border: 3px solid var(--mint-dark);
+            box-shadow: 0 6px 0px var(--mint-dark);
+        }
+
+        .btn-tabung:active {
+            box-shadow: 0 2px 0px var(--mint-dark);
+        }
+
+        .btn-large span.icon {
+            font-size: 2rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn-large:hover span.icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* --- CARDS & FORMS SECTION --- */
+        .section-card {
+            background: var(--white);
+            border: 3px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 0px #E2E8F0;
+        }
+
+        .section-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 3px solid #CBD5E1;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+            background-color: #F8FAFC;
+        }
+
+        .form-control:focus {
+            border-color: #94A3B8;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--soft-blue);
+            color: var(--blue-text);
+            border: 3px solid var(--blue-dark);
+            box-shadow: 0 4px 0px var(--blue-dark);
+            padding: 14px;
+            border-radius: 16px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn-submit:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px var(--blue-dark);
+        }
+
+        /* --- AMPLOP VISUAL DISPLAY --- */
+        .envelope-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .envelope-item {
+            padding: 12px 8px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 0.85rem;
+            border: 2px solid transparent;
+        }
+
+        .env-jajan { background-color: var(--cheerful-yellow); border-color: var(--yellow-dark); color: var(--yellow-text); }
+        .env-tabungan { background-color: var(--mint-green); border-color: var(--mint-dark); color: var(--mint-text); }
+        .env-darurat { background-color: var(--soft-blue); border-color: var(--blue-dark); color: var(--blue-text); }
+
+        .envelope-item div:first-child {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        .envelope-item div:last-child {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* --- TRANSACTION LOG --- */
+        .history-list {
+            list-style: none;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 4px;
+            border-bottom: 2px dashed #E2E8F0;
+            animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 2px solid rgba(0,0,0,0.05);
+        }
+
+        .history-details p {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .history-details span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
